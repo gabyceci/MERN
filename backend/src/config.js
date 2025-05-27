@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 
-
 //Ejecuto "Dotenv"
 //me ayudara a acceder al .env
 dotenv.config();

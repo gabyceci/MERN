@@ -1,4 +1,3 @@
-
 import dotenv from "dotenv";
 //importamos el ORM
 import mongoose from "mongoose";

@@ -1,11 +1,3 @@
-/*
-    Campos:
-        nombre
-        direccion
-        telefono
-        cronograma
-*/
-
 import { Schema, model } from "mongoose";
 
 const branchesSchema = new Schema(

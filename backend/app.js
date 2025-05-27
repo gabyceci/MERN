@@ -34,20 +34,20 @@ app.use(express.json());
 app.use(cookieParser())
 
 //Definir las rutas de las funciones que tendra la pagina web
-app.use("/api/products", validateAuthToken(["admin", "employee"]), productsRoutes);
+app.use("/api/products", productsRoutes);
 app.use("/api/clients", clientsRoutes);
 app.use("/api/branches", branchesRoutes);
 app.use("/api/reviews", reviewsRoutes);
 app.use("/api/employees", employeesRoutes);
 
-app.use("/api/registerEmployees", validateAuthToken(["admin"]), registerEmployeesRoutes)
+app.use("/api/registerEmployees", registerEmployeesRoutes)
 app.use("/api/login", loginRoutes)
 app.use("/api/logout", logoutRoutes)
 app.use("/api/registerClients", registerClientRoutes)
 
 app.use("/api/recoveryPassword", recoveryPasswordRoutes)
 
-app.use("/api/providers",validateAuthToken(["admin"]), providersRoutes)
+app.use("/api/providers", providersRoutes)
 
 //exporto la constante para poder usar express en otros archivos
 export default app;

@@ -9,6 +9,18 @@ productsController.getProducts = async (req, res) => {
   res.json(products);
 };
 
+productsController.getProductById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await productsModel.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving product", error });
+  }
+}
 // INSERT
 productsController.createProducts = async (req, res) => {
   const { name, description, price, stock } = req.body;
@@ -25,10 +37,10 @@ productsController.deleteProducts = async (req, res) => {
 
 // UPDATE
 productsController.updatedProducts = async (req, res) => {
-  //solicito todos los valores
   const { name, description, price, stock } = req.body;
 
-  await productsModel.findByIdAndUpdate(
+  try {
+    await productsModel.findByIdAndUpdate(
     req.params.id,
     {
       name,
@@ -38,8 +50,33 @@ productsController.updatedProducts = async (req, res) => {
     },
     { new: true }
   );
+    res.json({ message: "Product updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating product", error });
+  }
+}
 
-  res, json({ message: "product updated" });
-};
 
-export default productsController;
+
+  productsController.updatebyId = async (req, res) => {
+    const { id } = req.params;
+    const { name, description, price, stock } = req.body;
+
+    try {
+      const updatedProduct = await productsModel.findByIdAndUpdate(
+        id,
+        { name, description, price, stock },
+        { new: true }
+      );
+
+      if (!updatedProduct) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      res.json(updatedProduct);
+    } catch (error) {
+      res.status(500).json({ message: "Error updating product", error });
+    }
+  }
+
+  export default productsController;
