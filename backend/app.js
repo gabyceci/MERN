@@ -23,7 +23,7 @@ const app = express();
 app.use(
     cors({
       origin: "http://mern-brown-two.vercel.app",
-      methods: 'GET, HEAD, PUT, PAATCH, POST,DELETE',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       // Permitir envío de cookies y credenciales
       credentials: true
     })
