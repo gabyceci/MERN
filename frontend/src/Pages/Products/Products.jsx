@@ -29,7 +29,7 @@ function Products() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:4000/api/products');
+      const response = await fetch('https://mern-s77u.onrender.com/api/products');
       if (!response.ok) throw new Error('Error al cargar los productos');
       const data = await response.json();
       setProducts(data);
@@ -43,7 +43,7 @@ function Products() {
 
   const createProduct = async (formData) => {
     try {
-      const response = await fetch('http://localhost:4000/api/products', {
+      const response = await fetch('https://mern-s77u.onrender.com/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -63,7 +63,7 @@ function Products() {
     console.log('ID del producto:', selectedProduct._id); // <-- Y esto
 
     try {
-      const response = await fetch(`http://localhost:4000/api/products/${selectedProduct._id}`, {
+      const response = await fetch(`https://mern-s77u.onrender.com/api/products/${selectedProduct._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -95,7 +95,7 @@ function Products() {
     if (!window.confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
 
     try {
-      const response = await fetch(`http://localhost:4000/api/products/${id}`, {
+      const response = await fetch(`https://mern-s77u.onrender.com/api/products/${id}`, {
         method: 'DELETE',
       });
 

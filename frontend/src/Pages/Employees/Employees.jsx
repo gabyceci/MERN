@@ -34,7 +34,7 @@ function Employees() {
   const fetchEmployees = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:4000/api/employees');
+      const res = await fetch('https://mern-s77u.onrender.com/api/employees');
       const data = await res.json();
       setEmployees(data);
     } catch (err) {
@@ -46,7 +46,7 @@ function Employees() {
 
   const createEmployee = async (data) => {
     try {
-      const res = await fetch('http://localhost:4000/api/employees', {
+      const res = await fetch('https://mern-s77u.onrender.com/api/employees', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -63,7 +63,7 @@ function Employees() {
   const deleteEmployee = async (id) => {
     if (!window.confirm('¿Eliminar este empleado?')) return;
     try {
-      await fetch(`http://localhost:4000/api/employees/${id}`, { method: 'DELETE' });
+      await fetch(`https://mern-s77u.onrender.com/api/employees/${id}`, { method: 'DELETE' });
       await fetchEmployees();
     } catch {
       setError('Error al eliminar empleado');

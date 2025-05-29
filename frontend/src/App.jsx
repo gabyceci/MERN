@@ -12,11 +12,11 @@ function App() {
         <NavBar />
         <main className="container mx-auto px-4 py-8">
           <Routes>
-            {/* Ruta por defecto - redirige a marcas */}
-            <Route path="/" element={<Navigate to="/marcas" replace />} />
+            {/* Ruta por defecto - redirige a sucursales */}
+            <Route path="/" element={<Navigate to="/sucursales" replace />} />
             
             {/* Rutas principales */}
-            <Route path="/marcas" element={<Branches />} />
+            <Route path="/sucursales" element={<Branches />} />
             <Route path="/empleados" element={<Employees />} />
             <Route path="/productos" element={<Products />} />
             

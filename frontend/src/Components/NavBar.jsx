@@ -6,7 +6,7 @@ function NavBar() {
   const location = useLocation();
 
   const navItems = [
-    { name: 'Marcas', path: '/marcas' },
+    { name: 'Sucursales', path: '/sucursales' },
     { name: 'Empleados', path: '/empleados' },
     { name: 'Productos', path: '/productos' }
   ];

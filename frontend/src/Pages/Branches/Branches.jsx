@@ -48,7 +48,7 @@ function Branches() {
   // Create new branch
   const createBranch = async (formData) => {
     try {
-      const response = await fetch('http://localhost:4000/api/branches', {
+      const response = await fetch('https://mern-s77u.onrender.com/api/branches', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ function Branches() {
   // Update branch
   const updateBranch = async (formData) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/branches/${editingBranch._id}`, {
+      const response = await fetch(`https://mern-s77u.onrender.com/api/branches/${editingBranch._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ function Branches() {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/api/branches/${id}`, {
+      const response = await fetch(`https://mern-s77u.onrender.com/api/branches/${id}`, {
         method: 'DELETE',
       });
 
