@@ -13,59 +13,48 @@
         level: Number
  */
 
-import {Schema, model} from "mongoose";
+        import {Schema, model} from "mongoose";
 
-const faqsSchema = new Schema(
-    {
-        customerld:{
-            type: Objectid,
-            
-        },
-        productid:{
-            type: Objectid,
-           
-        },
-        branchld:{
-            type:Objectid,
-            
-        },
-        employeeld:{
-            type: Objectid,
-         
-        },
-        subject:{
-            type: String,
-          
-        },
-        description:{
-            type: String,
-            
-        },
-        status:{
-            type: String,
-           
-        },
-        createdAt:{
-            type: Date,
-            
-        },
-        updatedAt:{
-            type: Date,
-         
-        },
-        response:{
-            type: String,
-           
-        },
-         level:{
-            type: Number,
-            
-        }
-    }, 
-    {
-        timestamps: true,
-        strict: false,
-    }
-);   
-
-export default model("faqs", faqsSchema);
+        const claimsSchema = new Schema(
+            {
+                customerId:{
+                    type: Schema.Types.ObjectId,
+                    required: true
+                },
+                productId:{
+                    type: Schema.Types.ObjectId
+                },
+                branchId:{
+                    type: Schema.Types.ObjectId
+                },
+                employeeId:{
+                    type: Schema.Types.ObjectId
+                },
+                subject:{
+                    type: String,
+                    required: true,
+                    minLength: 5
+                },
+                description:{
+                    type: String,
+                    required: true,
+                    minLength: 10
+                },
+                status:{
+                    type: String
+                },
+                response:{
+                    type: String,
+                    minLength: 10
+                },
+                level:{
+                    type: Number
+                }
+            }, 
+            {
+                timestamps: true,
+                strict: false,
+            }
+        );   
+        
+        export default model("claims", claimsSchema);
