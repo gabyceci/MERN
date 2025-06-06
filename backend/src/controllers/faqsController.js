@@ -82,9 +82,24 @@ faqsController.updateFaqs = async (req, res) => {
         }
 
         res.status(200).json({message: "Faqs update"})
-        
+
     } catch (error) {
         console.log("error" + error)
         res.status(500).json({message: "Internal server error"})
     }
 }
+
+
+//DELETE
+faqsController.deleteFaqs = async (req, res) => {
+    try {
+        const deleteFaqs = await faqsModel.findByIdAndDelete(req.params.id);
+
+        if(!deleteFaqs){
+            return res.status(400).json({message: "faq not found"});
+        }
+    } catch (error) {
+        console.log("error" + error)
+        res.status(500).json({message: "Internal server error"})
+    }
+};
