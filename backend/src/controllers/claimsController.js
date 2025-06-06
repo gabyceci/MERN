@@ -20,9 +20,7 @@ claimsController.insertClaim = async (req, res) => {
     const {customerId, productId, branchId, employeeId, subject, description, status, response, level} = req.body;
     
     try {
-        //Validaciones según la imagen
 
-        // customerId: required and valid ObjectId
         if(!customerId){
             return res.status(400).json({message: "CustomerId is required"})
         }
@@ -30,7 +28,6 @@ claimsController.insertClaim = async (req, res) => {
             return res.status(400).json({message: "CustomerId must be a valid ObjectId"})
         }
 
-        // productId, branchId, employeeId: if provided, must be valid ObjectIds
         if(productId && !mongoose.Types.ObjectId.isValid(productId)){
             return res.status(400).json({message: "ProductId must be a valid ObjectId"})
         }
@@ -41,7 +38,6 @@ claimsController.insertClaim = async (req, res) => {
             return res.status(400).json({message: "EmployeeId must be a valid ObjectId"})
         }
 
-        // subject: required, min 5 characters
         if(!subject){
             return res.status(400).json({message: "Subject is required"})
         }
@@ -49,7 +45,6 @@ claimsController.insertClaim = async (req, res) => {
             return res.status(400).json({message: "Subject must have at least 5 characters"})
         }
 
-        // description: required, min 10 characters
         if(!description){
             return res.status(400).json({message: "Description is required"})
         }
@@ -57,7 +52,6 @@ claimsController.insertClaim = async (req, res) => {
             return res.status(400).json({message: "Description must have at least 10 characters"})
         }
 
-        // response: if provided, min 10 characters
         if(response && response.length < 10){
             return res.status(400).json({message: "Response must have at least 10 characters"})
         }
@@ -88,7 +82,6 @@ claimsController.updateClaim = async (req, res) => {
     const {customerId, productId, branchId, employeeId, subject, description, status, response, level} = req.body;
     
     try {
-        //Validaciones para update
         
         if(customerId && !mongoose.Types.ObjectId.isValid(customerId)){
             return res.status(400).json({message: "CustomerId must be a valid ObjectId"})
