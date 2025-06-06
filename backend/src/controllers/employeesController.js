@@ -82,7 +82,7 @@ employeesController.updatedEmployees = async (req, res) => {
     { new: true }
   );
 
-  res, json({ message: "Employees updated" });
+  res.json({ message: "Employees updated" });
 };
 
 export default employeesController;

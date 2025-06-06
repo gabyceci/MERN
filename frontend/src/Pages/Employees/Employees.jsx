@@ -35,6 +35,7 @@ function Employees() {
   const fetchEmployees = async () => {
     try {
       setLoading(true);
+      //const res = await fetch('http://localhost:4000/api/employees');
       const res = await fetch('https://mern-s77u.onrender.com/api/employees');
       const data = await res.json();
       setEmployees(data);
@@ -48,21 +49,22 @@ function Employees() {
   const createEmployee = async (data) => {
     try {
       console.log('Creando empleado:', data); // Para debugging
+      //const res = await fetch('http://localhost:4000/api/employees', {
       const res = await fetch('https://mern-s77u.onrender.com/api/employees', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      
+
       if (!res.ok) {
         const errorText = await res.text();
         console.error('Error en la respuesta:', res.status, errorText);
         throw new Error(`Error ${res.status}: ${errorText}`);
       }
-      
+
       const result = await res.json();
       console.log('Empleado creado:', result);
-      
+
       await fetchEmployees();
       closeModal();
       setError(null); // Limpiar errores previos
@@ -75,21 +77,21 @@ function Employees() {
   const updateEmployee = async (data) => {
     try {
       console.log('Actualizando empleado:', editingEmployee._id, data); // Para debugging
+      //const res = await fetch(`http://localhost:4000/api/employees/${editingEmployee._id}`, {
       const res = await fetch(`https://mern-s77u.onrender.com/api/employees/${editingEmployee._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      
       if (!res.ok) {
         const errorText = await res.text();
         console.error('Error en la respuesta:', res.status, errorText);
         throw new Error(`Error ${res.status}: ${errorText}`);
       }
-      
+
       const result = await res.json();
       console.log('Empleado actualizado:', result);
-      
+
       await fetchEmployees();
       closeModal();
       setError(null); // Limpiar errores previos
@@ -117,7 +119,7 @@ function Employees() {
 
   const openEditModal = (employee) => {
     setEditingEmployee(employee);
-    
+
     // Llenar el formulario con los datos del empleado
     setValue('name', employee.name);
     setValue('lastName', employee.lastName);
@@ -131,7 +133,7 @@ function Employees() {
     setValue('isVerified', employee.isVerified);
     // No llenar la contraseña por seguridad
     setValue('password', '');
-    
+
     setShowModal(true);
   };
 
@@ -210,7 +212,7 @@ function Employees() {
                 <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> {emp.isVerified ? 'Verificado' : 'No verificado'}</div>
               </div>
               <div className="flex gap-2 mt-4">
-                <button 
+                <button
                   onClick={() => openEditModal(emp)}
                   className="flex-1 bg-blue-50 text-blue-600 px-3 py-2 rounded-lg text-sm flex items-center justify-center gap-2 hover:bg-blue-100 transition-colors"
                 >
