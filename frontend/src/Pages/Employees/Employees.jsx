@@ -47,31 +47,55 @@ function Employees() {
 
   const createEmployee = async (data) => {
     try {
+      console.log('Creando empleado:', data); // Para debugging
       const res = await fetch('https://mern-s77u.onrender.com/api/employees', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      if (!res.ok) throw new Error();
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Error en la respuesta:', res.status, errorText);
+        throw new Error(`Error ${res.status}: ${errorText}`);
+      }
+      
+      const result = await res.json();
+      console.log('Empleado creado:', result);
+      
       await fetchEmployees();
       closeModal();
-    } catch {
-      setError('Error al crear empleado');
+      setError(null); // Limpiar errores previos
+    } catch (error) {
+      console.error('Error al crear empleado:', error);
+      setError(`Error al crear empleado: ${error.message}`);
     }
   };
 
   const updateEmployee = async (data) => {
     try {
+      console.log('Actualizando empleado:', editingEmployee._id, data); // Para debugging
       const res = await fetch(`https://mern-s77u.onrender.com/api/employees/${editingEmployee._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      if (!res.ok) throw new Error();
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Error en la respuesta:', res.status, errorText);
+        throw new Error(`Error ${res.status}: ${errorText}`);
+      }
+      
+      const result = await res.json();
+      console.log('Empleado actualizado:', result);
+      
       await fetchEmployees();
       closeModal();
-    } catch {
-      setError('Error al actualizar empleado');
+      setError(null); // Limpiar errores previos
+    } catch (error) {
+      console.error('Error al actualizar empleado:', error);
+      setError(`Error al actualizar empleado: ${error.message}`);
     }
   };
 
@@ -120,7 +144,7 @@ function Employees() {
   const onSubmit = (data) => {
     if (editingEmployee) {
       // Si estamos editando y la contraseña está vacía, no la incluimos en la actualización
-      if (!data.password) {
+      if (!data.password || data.password.trim() === '') {
         const { password, ...dataWithoutPassword } = data;
         updateEmployee(dataWithoutPassword);
       } else {
@@ -500,13 +524,21 @@ function Employees() {
                     <input
                       {...register('password', {
                         required: editingEmployee ? false : 'La contraseña es requerida',
-                        minLength: {
-                          value: 8,
-                          message: 'La contraseña debe tener al menos 8 caracteres'
-                        },
-                        pattern: {
-                          value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]/,
-                          message: 'La contraseña debe contener al menos una mayúscula, una minúscula y un número'
+                        validate: (value) => {
+                          // Si estamos editando y el campo está vacío, es válido
+                          if (editingEmployee && (!value || value.trim() === '')) {
+                            return true;
+                          }
+                          // Si hay valor, validar formato
+                          if (value && value.length > 0) {
+                            if (value.length < 8) {
+                              return 'La contraseña debe tener al menos 8 caracteres';
+                            }
+                            if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]/.test(value)) {
+                              return 'La contraseña debe contener al menos una mayúscula, una minúscula y un número';
+                            }
+                          }
+                          return true;
                         }
                       })}
                       type="password"
