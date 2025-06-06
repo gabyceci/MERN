@@ -8,6 +8,7 @@ function Employees() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState(null);
+  const [editingEmployee, setEditingEmployee] = useState(null);
 
   const {
     register,
@@ -53,10 +54,24 @@ function Employees() {
       });
       if (!res.ok) throw new Error();
       await fetchEmployees();
-      setShowModal(false);
-      reset();
+      closeModal();
     } catch {
       setError('Error al crear empleado');
+    }
+  };
+
+  const updateEmployee = async (data) => {
+    try {
+      const res = await fetch(`https://mern-s77u.onrender.com/api/employees/${editingEmployee._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error();
+      await fetchEmployees();
+      closeModal();
+    } catch {
+      setError('Error al actualizar empleado');
     }
   };
 
@@ -70,9 +85,50 @@ function Employees() {
     }
   };
 
+  const openCreateModal = () => {
+    setEditingEmployee(null);
+    reset();
+    setShowModal(true);
+  };
+
+  const openEditModal = (employee) => {
+    setEditingEmployee(employee);
+    
+    // Llenar el formulario con los datos del empleado
+    setValue('name', employee.name);
+    setValue('lastName', employee.lastName);
+    setValue('birthday', employee.birthday ? new Date(employee.birthday).toISOString().split('T')[0] : '');
+    setValue('email', employee.email);
+    setValue('address', employee.address);
+    setValue('hireDate', employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '');
+    setValue('telephone', employee.telephone);
+    setValue('dui', employee.dui);
+    setValue('isssNumber', employee.isssNumber);
+    setValue('isVerified', employee.isVerified);
+    // No llenar la contraseña por seguridad
+    setValue('password', '');
+    
+    setShowModal(true);
+  };
+
   const closeModal = () => {
     setShowModal(false);
+    setEditingEmployee(null);
     reset();
+  };
+
+  const onSubmit = (data) => {
+    if (editingEmployee) {
+      // Si estamos editando y la contraseña está vacía, no la incluimos en la actualización
+      if (!data.password) {
+        const { password, ...dataWithoutPassword } = data;
+        updateEmployee(dataWithoutPassword);
+      } else {
+        updateEmployee(data);
+      }
+    } else {
+      createEmployee(data);
+    }
   };
 
   useEffect(() => {
@@ -102,7 +158,7 @@ function Employees() {
           />
         </div>
         <button
-          onClick={() => setShowModal(true)}
+          onClick={openCreateModal}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
         >
           <Plus className="w-4 h-4" /> Agregar Empleado
@@ -130,12 +186,15 @@ function Employees() {
                 <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> {emp.isVerified ? 'Verificado' : 'No verificado'}</div>
               </div>
               <div className="flex gap-2 mt-4">
-                <button className="flex-1 bg-blue-50 text-blue-600 px-3 py-2 rounded-lg text-sm flex items-center justify-center gap-2">
+                <button 
+                  onClick={() => openEditModal(emp)}
+                  className="flex-1 bg-blue-50 text-blue-600 px-3 py-2 rounded-lg text-sm flex items-center justify-center gap-2 hover:bg-blue-100 transition-colors"
+                >
                   <Edit2 className="w-4 h-4" /> Editar
                 </button>
                 <button
                   onClick={() => deleteEmployee(emp._id)}
-                  className="bg-red-50 text-red-600 p-2 rounded-lg"
+                  className="bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-100 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -155,8 +214,12 @@ function Employees() {
                   <User className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold">Agregar Nuevo Empleado</h2>
-                  <p className="text-blue-100 text-sm">Complete la información del empleado</p>
+                  <h2 className="text-xl font-bold">
+                    {editingEmployee ? 'Editar Empleado' : 'Agregar Nuevo Empleado'}
+                  </h2>
+                  <p className="text-blue-100 text-sm">
+                    {editingEmployee ? 'Modifique la información del empleado' : 'Complete la información del empleado'}
+                  </p>
                 </div>
               </div>
               <button
@@ -272,7 +335,6 @@ function Employees() {
                     <input
                       {...register('dui', {
                         required: 'El DUI es requerido'
-
                       })}
                       type="text"
                       placeholder="00000000-0"
@@ -433,11 +495,11 @@ function Employees() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       <Lock className="w-4 h-4 inline mr-1" />
-                      Contraseña *
+                      Contraseña {editingEmployee ? '(dejar vacío para mantener actual)' : '*'}
                     </label>
                     <input
                       {...register('password', {
-                        required: 'La contraseña es requerida',
+                        required: editingEmployee ? false : 'La contraseña es requerida',
                         minLength: {
                           value: 8,
                           message: 'La contraseña debe tener al menos 8 caracteres'
@@ -448,13 +510,18 @@ function Employees() {
                         }
                       })}
                       type="password"
-                      placeholder="••••••••"
+                      placeholder={editingEmployee ? "••••••••" : "••••••••"}
                       className={`w-full px-4 py-3 border rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.password ? 'border-red-500 bg-red-50' : 'border-gray-300'
                         }`}
                     />
                     {errors.password && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
                       <X className="w-3 h-3" /> {errors.password.message}
                     </p>}
+                    {editingEmployee && (
+                      <p className="text-gray-500 text-xs mt-1">
+                        Deje este campo vacío si no desea cambiar la contraseña
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex items-end">
@@ -486,11 +553,11 @@ function Employees() {
                 </button>
                 <button
                   type="submit"
-                  onClick={handleSubmit(createEmployee)}
+                  onClick={handleSubmit(onSubmit)}
                   className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
                 >
-                  <Plus className="w-4 h-4" />
-                  Crear Empleado
+                  {editingEmployee ? <Edit2 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                  {editingEmployee ? 'Actualizar Empleado' : 'Crear Empleado'}
                 </button>
               </div>
             </div>
