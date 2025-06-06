@@ -30,7 +30,7 @@ function Branches() {
   const fetchBranches = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:4000/api/branches');
+      const response = await fetch('https://mern-s77u.onrender.com/api/branches');
       if (!response.ok) {
         throw new Error('Error al cargar las sucursales');
       }
